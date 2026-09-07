@@ -6,12 +6,12 @@ import authRouter from "./src/routes/auth";
 import addressRouter from "./src/routes/address";
 import ordersRouter from "./src/routes/orders";
 import adminRouter from "./src/routes/admin";
-import productsRouter from "./src/routes/products";
 import variantsRouter from "./src/routes/variants";
 import cartRouter from "./src/routes/cart";
 import wishlistRouter from "./src/routes/wishlist";
 import reviewRoutes from "./src/routes/reviews";
 import couponRoutes from "./src/routes/coupons";
+import productRoutes from "./src/routes/productRoutes";
 
 // =========================================================
 // ENVIRONMENT
@@ -154,6 +154,11 @@ app.use("/api/addresses", addressRouter);
 // =========================================================
 // PRODUCT ROUTES
 // =========================================================
+app.use("/api/products", productRoutes);
+// =========================================================
+// PRODUCT ROUTES
+// =========================================================
+
 
 
 // =========================================================

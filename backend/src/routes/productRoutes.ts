@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { db } from "../prisma/db";
 
-const productsRouter = Router();
+const productRoutes = Router();
 
 // =========================================================
 // GET ALL PRODUCTS
 // =========================================================
 
-productsRouter.get("/", async (_req, res) => {
+productRoutes.get("/", async (_req, res) => {
   try {
     const products = await db.orm.public.Product
       .where({ isActive: true })
@@ -33,7 +33,7 @@ productsRouter.get("/", async (_req, res) => {
 // GET SINGLE PRODUCT
 // =========================================================
 
-productsRouter.get("/:id", async (req, res) => {
+productRoutes.get("/:id", async (req, res) => {
   try {
     const productId = Number(req.params.id);
 
@@ -74,7 +74,7 @@ productsRouter.get("/:id", async (req, res) => {
 });
 
 // =========================================================
-// EXPORT ROUTER
+// EXPORT
 // =========================================================
 
-export default productsRouter;
+export default productRoutes;
