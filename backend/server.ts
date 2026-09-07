@@ -26,17 +26,18 @@ dotenv.config();
 const app = express();
 
 // =========================================================
-// PORT
+// PORT + HOST
 // =========================================================
 
 const PORT = Number(process.env.PORT) || 5000;
+const HOST = "0.0.0.0";
 
 // =========================================================
 // CORS
 // =========================================================
 
 const allowedOrigins = [
-  // localhost
+  // Local development
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5175",
@@ -47,6 +48,11 @@ const allowedOrigins = [
   "http://127.0.0.1:5174",
   "http://127.0.0.1:5175",
   "http://127.0.0.1:5176",
+
+  // Production frontend
+  ...(process.env.FRONTEND_URL
+    ? [process.env.FRONTEND_URL]
+    : []),
 ];
 
 app.use(
@@ -215,23 +221,23 @@ app.use(
 // START SERVER
 // =========================================================
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log("");
   console.log("=========================================");
   console.log("       FASHIONSTORE BACKEND API");
   console.log("=========================================");
-  console.log(`Server:    http://localhost:${PORT}`);
-  console.log(`API:       http://localhost:${PORT}/api`);
-  console.log(`Auth:      http://localhost:${PORT}/api/auth`);
-  console.log(`Addresses: http://localhost:${PORT}/api/addresses`);
-  console.log(`Products:  http://localhost:${PORT}/api/products`);
-  console.log(`Orders:    http://localhost:${PORT}/api/orders`);
-  console.log(`Variants:  http://localhost:${PORT}/api/variants`);
-  console.log(`Cart:      http://localhost:${PORT}/api/cart`);
-  console.log(`Wishlist:  http://localhost:${PORT}/api/wishlist`);
-  console.log(`Reviews:   http://localhost:${PORT}/api/reviews`);
-  console.log(`Coupons:   http://localhost:${PORT}/api/coupons`);
-  console.log(`Admin:     http://localhost:${PORT}/api/admin`);
+  console.log(`Server:    http://${HOST}:${PORT}`);
+  console.log(`API:       http://${HOST}:${PORT}/api`);
+  console.log(`Auth:      http://${HOST}:${PORT}/api/auth`);
+  console.log(`Addresses: http://${HOST}:${PORT}/api/addresses`);
+  console.log(`Products:  http://${HOST}:${PORT}/api/products`);
+  console.log(`Orders:    http://${HOST}:${PORT}/api/orders`);
+  console.log(`Variants:  http://${HOST}:${PORT}/api/variants`);
+  console.log(`Cart:      http://${HOST}:${PORT}/api/cart`);
+  console.log(`Wishlist:  http://${HOST}:${PORT}/api/wishlist`);
+  console.log(`Reviews:   http://${HOST}:${PORT}/api/reviews`);
+  console.log(`Coupons:   http://${HOST}:${PORT}/api/coupons`);
+  console.log(`Admin:     http://${HOST}:${PORT}/api/admin`);
   console.log("=========================================");
   console.log("");
 });
