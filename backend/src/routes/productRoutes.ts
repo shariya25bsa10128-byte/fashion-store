@@ -20,11 +20,12 @@ productRoutes.get("/", async (_req, res) => {
       data: products,
     });
   } catch (error) {
-    console.error("Get products error:", error);
+    console.error("GET PRODUCTS ERROR:", error);
 
     return res.status(500).json({
       success: false,
       message: "Failed to fetch products",
+      error: error instanceof Error ? error.message : String(error),
     });
   }
 });
@@ -64,11 +65,12 @@ productRoutes.get("/:id", async (req, res) => {
       data: product,
     });
   } catch (error) {
-    console.error("Get product error:", error);
+    console.error("GET PRODUCT ERROR:", error);
 
     return res.status(500).json({
       success: false,
       message: "Failed to fetch product",
+      error: error instanceof Error ? error.message : String(error),
     });
   }
 });
