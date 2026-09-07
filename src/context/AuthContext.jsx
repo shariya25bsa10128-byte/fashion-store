@@ -8,7 +8,8 @@ import {
 
 const AuthContext = createContext(null);
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL =
+  `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth`;
 
 const USER_KEY = "fashionstore_user";
 const TOKEN_KEY = "fashionstore_token";

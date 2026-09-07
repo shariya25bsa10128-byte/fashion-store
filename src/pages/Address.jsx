@@ -13,7 +13,8 @@ import {
 import { useAuth } from "../context/AuthContext";
 import "./Address.css";
 
-const API_URL = "http://localhost:5000";
+const API_URL =
+  import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5000";
 
 function Address() {
   const { user, isLoggedIn, loading: authLoading } = useAuth();

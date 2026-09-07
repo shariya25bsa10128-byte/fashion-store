@@ -9,13 +9,11 @@ import "../admin.css";
 
 // Normal product API
 // Used for creating and editing products.
-const API_URL = "http://localhost:5000/api/products";
+const API_URL =
+  `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/products`;
 
-// Admin product API
-// Used for loading ALL products, including inactive products,
-// and activating/deactivating products.
 const ADMIN_API_URL =
-  "http://localhost:5000/api/admin/products";
+  `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/admin/products`;
 
 // =========================================================
 // EMPTY FORM
