@@ -1,0 +1,719 @@
+/* =========================================================
+   FASHIONSTORE — SIGNUP PAGE
+   SAME DESIGN SYSTEM AS LOGIN
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #ffffff;
+  color: #111111;
+}
+
+
+/* =========================================================
+   LEFT BRAND SECTION
+   ========================================================= */
+
+.auth-brand {
+  position: relative;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+
+  padding: 80px;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.96),
+      rgba(25, 25, 25, 0.98)
+    );
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   SUBTLE CIRCLES
+   ========================================================= */
+
+.auth-brand::before {
+  content: "";
+
+  position: absolute;
+
+  width: 520px;
+  height: 520px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 50%;
+
+  top: -180px;
+  right: -180px;
+}
+
+
+.auth-brand::after {
+  content: "";
+
+  position: absolute;
+
+  width: 380px;
+  height: 380px;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 50%;
+
+  bottom: -160px;
+  left: -150px;
+}
+
+
+/* =========================================================
+   BRAND CONTENT
+   ========================================================= */
+
+.auth-brand-content {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 520px;
+}
+
+
+.auth-eyebrow {
+  margin: 0 0 35px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 4px;
+
+  color: rgba(255, 255, 255, 0.65);
+}
+
+
+.auth-brand h1 {
+  margin: 0;
+
+  font-size: clamp(60px, 6vw, 96px);
+
+  line-height: 0.9;
+
+  font-weight: 800;
+
+  letter-spacing: -4px;
+}
+
+
+.auth-brand-text {
+  max-width: 430px;
+
+  margin: 42px 0 0;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+
+  color: rgba(255, 255, 255, 0.62);
+}
+
+
+/* =========================================================
+   RIGHT FORM SECTION
+   ========================================================= */
+
+.auth-form-section {
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 70px 60px;
+
+  background: #ffffff;
+}
+
+
+.auth-form-container {
+  width: 100%;
+
+  max-width: 460px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.auth-header {
+  margin-bottom: 42px;
+}
+
+
+.auth-label {
+  margin: 0 0 13px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  color: #888888;
+}
+
+
+.auth-header h2 {
+  margin: 0;
+
+  font-size: 42px;
+
+  line-height: 1.1;
+
+  font-weight: 700;
+
+  letter-spacing: -1.5px;
+
+  color: #111111;
+}
+
+
+.auth-header > p:last-child {
+  margin: 16px 0 0;
+
+  max-width: 400px;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+
+  color: #777777;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.auth-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 25px;
+}
+
+
+.form-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.form-field label {
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  color: #333333;
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.form-field input {
+  width: 100%;
+
+  height: 54px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dddddd;
+
+  border-radius: 0;
+
+  padding: 0 16px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #111111;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.form-field input::placeholder {
+  color: #aaaaaa;
+}
+
+
+.form-field input:hover {
+  border-color: #bbbbbb;
+}
+
+
+.form-field input:focus {
+  border-color: #111111;
+
+  box-shadow: 0 0 0 1px #111111;
+}
+
+
+.form-field input:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.6;
+}
+
+
+/* =========================================================
+   PASSWORD
+   ========================================================= */
+
+.password-input-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+
+.password-input-wrapper input {
+  padding-right: 55px;
+}
+
+
+.password-toggle {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  width: 52px;
+  height: 54px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #777777;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.password-toggle:hover {
+  color: #111111;
+
+  background: #f7f7f7;
+}
+
+
+.password-toggle:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.5;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.auth-error {
+  margin-bottom: 25px;
+
+  padding: 13px 15px;
+
+  border: 1px solid #e4caca;
+
+  background: #fff7f7;
+
+  color: #b42318;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   SUCCESS
+   ========================================================= */
+
+.auth-success {
+  margin-bottom: 25px;
+
+  padding: 13px 15px;
+
+  border: 1px solid #c9dfce;
+
+  background: #f5fbf6;
+
+  color: #26733b;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.auth-submit {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 56px;
+
+  margin-top: 4px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  border: 1px solid #111111;
+
+  background: #111111;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.2s ease;
+}
+
+
+.auth-submit:hover {
+  background: #ffffff;
+
+  color: #111111;
+}
+
+
+.auth-submit:active {
+  transform: translateY(1px);
+}
+
+
+.auth-submit:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.6;
+
+  background: #111111;
+
+  color: #ffffff;
+
+  transform: none;
+}
+
+
+/* =========================================================
+   ACCOUNT SWITCH
+   ========================================================= */
+
+.auth-switch {
+  margin-top: 32px;
+
+  padding-top: 28px;
+
+  border-top: 1px solid #eeeeee;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+
+.auth-switch span {
+  font-size: 13px;
+
+  color: #777777;
+}
+
+
+.auth-switch a {
+  flex-shrink: 0;
+
+  color: #111111;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  text-decoration: none;
+
+  transition: opacity 0.2s ease;
+}
+
+
+.auth-switch a:hover {
+  opacity: 0.55;
+}
+
+
+/* =========================================================
+   BACK TO SHOPPING
+   ========================================================= */
+
+.auth-back-link {
+  display: inline-block;
+
+  margin-top: 30px;
+
+  color: #777777;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.auth-back-link:hover {
+  color: #111111;
+
+  transform: translateX(-3px);
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.auth-submit:focus-visible,
+.password-toggle:focus-visible,
+.auth-switch a:focus-visible,
+.auth-back-link:focus-visible {
+  outline: 2px solid #111111;
+
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .auth-page {
+    grid-template-columns: 42% 58%;
+  }
+
+
+  .auth-brand {
+    padding: 55px;
+  }
+
+
+  .auth-brand h1 {
+    font-size: clamp(52px, 6vw, 72px);
+  }
+
+
+  .auth-form-section {
+    padding: 60px 45px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+  .auth-page {
+    min-height: 100vh;
+
+    display: block;
+  }
+
+
+  .auth-brand {
+    min-height: auto;
+
+    padding: 28px 24px;
+  }
+
+
+  .auth-brand::before,
+  .auth-brand::after {
+    display: none;
+  }
+
+
+  .auth-brand-content {
+    max-width: none;
+  }
+
+
+  .auth-eyebrow {
+    margin-bottom: 0;
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+  }
+
+
+  .auth-brand h1 {
+    display: none;
+  }
+
+
+  .auth-brand-text {
+    display: none;
+  }
+
+
+  .auth-form-section {
+    min-height: auto;
+
+    padding: 55px 24px 45px;
+
+    align-items: flex-start;
+  }
+
+
+  .auth-form-container {
+    max-width: none;
+  }
+
+
+  .auth-header {
+    margin-bottom: 35px;
+  }
+
+
+  .auth-header h2 {
+    font-size: 34px;
+  }
+
+
+  .auth-header > p:last-child {
+    font-size: 13px;
+  }
+
+
+  .auth-form {
+    gap: 22px;
+  }
+
+
+  .auth-switch {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .auth-brand {
+    padding: 24px 20px;
+  }
+
+
+  .auth-form-section {
+    padding: 45px 20px 35px;
+  }
+
+
+  .auth-header h2 {
+    font-size: 30px;
+  }
+
+
+  .auth-submit {
+    min-height: 54px;
+  }
+
+}

@@ -1,0 +1,336 @@
+/* =========================================
+   EDIT PROFILE PAGE
+========================================= */
+
+.edit-profile-page {
+  min-height: 100vh;
+  background: #f7f7f5;
+  padding: 70px 7%;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.edit-profile-header {
+  max-width: 900px;
+  margin: 0 auto 45px;
+}
+
+.edit-profile-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #555;
+  text-decoration: none;
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  margin-bottom: 35px;
+
+  transition: 0.2s ease;
+}
+
+.edit-profile-back:hover {
+  color: #000;
+}
+
+.edit-profile-eyebrow {
+  margin: 0 0 10px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  color: #777;
+}
+
+.edit-profile-header h1 {
+  margin: 0;
+
+  font-size: clamp(38px, 5vw, 62px);
+  line-height: 1;
+
+  font-weight: 600;
+  letter-spacing: -2px;
+}
+
+.edit-profile-header p:last-child {
+  margin-top: 18px;
+
+  color: #777;
+
+  font-size: 15px;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.edit-profile-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.edit-profile-form {
+  background: #fff;
+
+  padding: 45px;
+
+  border: 1px solid #e5e5e5;
+}
+
+
+/* =========================================
+   FIELD
+========================================= */
+
+.edit-profile-field {
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 25px;
+}
+
+.edit-profile-field label {
+  margin-bottom: 9px;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+
+  color: #555;
+}
+
+.edit-profile-field input {
+  width: 100%;
+  box-sizing: border-box;
+
+  border: 1px solid #d8d8d8;
+
+  background: #fff;
+
+  padding: 15px 16px;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: border-color 0.2s ease;
+}
+
+.edit-profile-field input:focus {
+  border-color: #111;
+}
+
+.edit-profile-field input:disabled {
+  background: #f4f4f4;
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   MESSAGES
+========================================= */
+
+.edit-profile-error,
+.edit-profile-success {
+  padding: 13px 15px;
+
+  margin-bottom: 22px;
+
+  font-size: 13px;
+}
+
+.edit-profile-error {
+  background: #fff1f1;
+  border: 1px solid #f0caca;
+  color: #b42323;
+}
+
+.edit-profile-success {
+  background: #f0faf2;
+  border: 1px solid #c8e7ce;
+  color: #28753a;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.edit-profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 35px;
+}
+
+.edit-profile-cancel {
+  padding: 14px 20px;
+
+  color: #333;
+  text-decoration: none;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.edit-profile-save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: none;
+
+  background: #111;
+  color: #fff;
+
+  padding: 14px 22px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.edit-profile-save:hover {
+  background: #333;
+}
+
+.edit-profile-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+.edit-profile-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 70vh;
+
+  font-size: 14px;
+  color: #666;
+}
+
+
+/* =========================================
+   LOGIN REQUIRED
+========================================= */
+
+.edit-profile-login {
+  min-height: 70vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+}
+
+.edit-profile-login-icon {
+  width: 70px;
+  height: 70px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid #ddd;
+
+  border-radius: 50%;
+
+  margin-bottom: 25px;
+}
+
+.edit-profile-login p {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #777;
+}
+
+.edit-profile-login h1 {
+  margin: 10px 0;
+
+  font-size: 42px;
+}
+
+.edit-profile-login span {
+  color: #777;
+  font-size: 14px;
+}
+
+.edit-profile-signin {
+  margin-top: 28px;
+
+  padding: 14px 28px;
+
+  background: #111;
+  color: #fff;
+
+  text-decoration: none;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .edit-profile-page {
+    padding: 45px 20px;
+  }
+
+  .edit-profile-form {
+    padding: 25px 20px;
+  }
+
+  .edit-profile-header h1 {
+    font-size: 42px;
+  }
+
+  .edit-profile-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .edit-profile-save,
+  .edit-profile-cancel {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+}

@@ -1,0 +1,17 @@
+# Local development / AI tool files
+.agents/
+.claude/
+.cursor/
+.devin/
+
+# Local database backup
+fashion_store_backup.sql
+
+
+
+
+
+
+node_modules/
+dist/
+.env

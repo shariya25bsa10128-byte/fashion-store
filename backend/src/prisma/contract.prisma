@@ -1,0 +1,308 @@
+// use prisma-next
+
+// =========================================
+// USER / AUTHENTICATION
+// =========================================
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+
+  // Authentication
+  password     String
+  passwordHash String
+
+  username     String?
+  name         String?
+  phone        String
+  role         String   @default("USER")
+
+  addresses    Address[]
+  cart         Cart?
+  wishlist     Wishlist?
+  orders       Order[]
+  reviews      Review[]
+
+  createdAt    TimestamptzString @default(now())
+  updatedAt    temporal.updatedAtString()
+}
+
+
+// =========================================
+// ADDRESS
+// =========================================
+
+model Address {
+  id           Int      @id @default(autoincrement())
+
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int
+
+  fullName     String
+  phone        String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String
+  postalCode   String
+  country      String   @default("India")
+
+  isDefault    Boolean  @default(false)
+
+  createdAt    TimestamptzString @default(now())
+  updatedAt    temporal.updatedAtString()
+}
+
+
+// =========================================
+// PRODUCTS
+// =========================================
+
+model Product {
+  id            Int      @id @default(autoincrement())
+
+  name          String
+  description   String?
+  category      String
+  subcategory   String?
+
+  price         Int
+  oldPrice      Int?
+
+  image         String
+  badge         String?
+
+  isNew         Boolean  @default(false)
+  isSale        Boolean  @default(false)
+  isActive      Boolean  @default(true)
+
+  variants      ProductVariant[]
+  cartItems     CartItem[]
+  wishlistItems WishlistItem[]
+  orderItems    OrderItem[]
+  reviews       Review[]
+
+  createdAt     TimestamptzString @default(now())
+  updatedAt     temporal.updatedAtString()
+}
+
+
+// =========================================
+// PRODUCT VARIANTS
+// SIZE + COLOR + STOCK
+// =========================================
+
+model ProductVariant {
+  id          Int      @id @default(autoincrement())
+
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   Int
+
+  size        String?
+  color       String?
+  sku         String   @unique
+
+  stock       Int      @default(0)
+
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+}
+
+
+// =========================================
+// CART
+// =========================================
+
+model Cart {
+  id          Int       @id @default(autoincrement())
+
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int       @unique
+
+  items       CartItem[]
+
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+}
+
+
+// =========================================
+// CART ITEMS
+// =========================================
+
+model CartItem {
+  id          Int      @id @default(autoincrement())
+
+  cart        Cart     @relation(fields: [cartId], references: [id])
+  cartId      Int
+
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   Int
+
+  variantId   Int?
+  size        String?
+  color       String?
+
+  quantity    Int      @default(1)
+
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+}
+
+
+// =========================================
+// WISHLIST
+// =========================================
+
+model Wishlist {
+  id          Int      @id @default(autoincrement())
+
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int      @unique
+
+  items       WishlistItem[]
+
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+}
+
+
+// =========================================
+// WISHLIST ITEMS
+// =========================================
+
+model WishlistItem {
+  id          Int      @id @default(autoincrement())
+
+  wishlist    Wishlist @relation(fields: [wishlistId], references: [id])
+  wishlistId  Int
+
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   Int
+
+  createdAt   TimestamptzString @default(now())
+}
+
+
+// =========================================
+// ORDERS
+// =========================================
+
+model Order {
+  id                 Int      @id @default(autoincrement())
+
+  orderNumber        String   @unique
+
+  user               User     @relation(fields: [userId], references: [id])
+  userId             Int
+
+  items              OrderItem[]
+
+  // Customer information snapshot
+  customerName       String
+  customerEmail      String
+  customerPhone      String
+
+  // Shipping address snapshot
+  shippingAddress1   String
+  shippingAddress2   String?
+  shippingCity       String
+  shippingState      String
+  shippingPostalCode String
+  shippingCountry    String   @default("India")
+
+  subtotal           Int
+  discount           Int      @default(0)
+  shippingFee        Int      @default(0)
+  total              Int
+
+  couponCode         String?
+
+  paymentMethod      String
+  paymentStatus      String   @default("PENDING")
+
+  orderStatus        String   @default("PLACED")
+
+  trackingNumber     String?
+  courierName        String?
+
+  createdAt          TimestamptzString @default(now())
+  updatedAt          temporal.updatedAtString()
+}
+
+
+// =========================================
+// ORDER ITEMS
+// =========================================
+
+model OrderItem {
+  id           Int      @id @default(autoincrement())
+
+  order        Order    @relation(fields: [orderId], references: [id])
+  orderId      Int
+
+  product      Product  @relation(fields: [productId], references: [id])
+  productId    Int
+
+  productName  String
+  productImage String
+
+  size         String?
+  color        String?
+
+  price        Int
+  quantity     Int
+
+  createdAt    TimestamptzString @default(now())
+}
+
+
+// =========================================
+// REVIEWS
+// =========================================
+
+model Review {
+  id          Int      @id @default(autoincrement())
+
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   Int
+
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+
+  rating      Int
+  comment     String?
+
+  isApproved  Boolean  @default(true)
+
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@unique([productId, userId])
+}
+
+
+// =========================================
+// COUPONS
+// =========================================
+
+model Coupon {
+  id              Int      @id @default(autoincrement())
+
+  code            String   @unique
+
+  discountType    String
+  discountValue   Int
+
+  minimumAmount   Int      @default(0)
+  maximumDiscount Int?
+
+  usageLimit      Int?
+  usedCount       Int      @default(0)
+
+  expiresAt       TimestamptzString?
+  isActive        Boolean  @default(true)
+
+  createdAt       TimestamptzString @default(now())
+  updatedAt       temporal.updatedAtString()
+}
