@@ -5,6 +5,10 @@ import { ArrowLeft, Save, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import "./EditProfile.css";
 
+
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 function EditProfile() {
   const navigate = useNavigate();
 
@@ -146,7 +150,7 @@ function EditProfile() {
       setSaving(true);
 
       const response = await fetch(
-        "http://127.0.0.1:5000/api/auth/profile",
+  `${API_URL}/auth/profile`,
         {
           method: "PUT",
 
