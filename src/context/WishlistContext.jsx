@@ -5,38 +5,46 @@ import {
   useState,
 } from "react";
 
-const WishlistContext = createContext();
+import { useAuth } from "./AuthContext.jsx";
+
+const WishlistContext = createContext(null);
 
 const API_URL =
   import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-  
-
-// ---------------------------------------------------------
-// TEMPORARY USER ID
-// ---------------------------------------------------------
-// We are currently using user ID 4 because that is the
-// user we have been testing with in the backend.
-//
-// Later, when login/authentication is connected, we will
-// replace this with the logged-in user's ID.
-// ---------------------------------------------------------
-
-const USER_ID = 4;
 
 export function WishlistProvider({ children }) {
+  const {
+    user,
+    token,
+    isLoggedIn,
+  } = useAuth();
+
   const [wishlistItems, setWishlistItems] = useState([]);
   const [wishlistLoading, setWishlistLoading] = useState(true);
 
   // =======================================================
-  // LOAD WISHLIST FROM BACKEND
+  // LOAD WISHLIST
   // =======================================================
 
   const fetchWishlist = async () => {
+    if (!isLoggedIn || !user?.id || !token) {
+      setWishlistItems([]);
+      setWishlistLoading(false);
+      return;
+    }
+
     try {
       setWishlistLoading(true);
 
       const response = await fetch(
-        `${API_URL}/wishlist/${USER_ID}`
+        `${API_URL}/wishlist/${user.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       const result = await response.json();
@@ -47,10 +55,9 @@ export function WishlistProvider({ children }) {
         );
       }
 
-      // Backend returns:
-      // data.items = [...]
-
-      setWishlistItems(result.data?.items || []);
+      setWishlistItems(
+        result.data?.items || []
+      );
     } catch (error) {
       console.error(
         "Fetch wishlist error:",
@@ -64,28 +71,36 @@ export function WishlistProvider({ children }) {
   };
 
   // =======================================================
-  // LOAD WISHLIST WHEN APP STARTS
+  // LOAD WHEN LOGIN CHANGES
   // =======================================================
 
   useEffect(() => {
     fetchWishlist();
-  }, []);
+  }, [isLoggedIn, user?.id, token]);
 
   // =======================================================
-  // CHECK IF PRODUCT IS IN WISHLIST
+  // CHECK WISHLIST
   // =======================================================
 
   const isInWishlist = (productId) => {
     return wishlistItems.some(
-      (item) => Number(item.id) === Number(productId)
+      (item) =>
+        Number(item.id) === Number(productId)
     );
   };
 
   // =======================================================
-  // ADD PRODUCT TO WISHLIST
+  // ADD TO WISHLIST
   // =======================================================
 
   const addToWishlist = async (product) => {
+    if (!isLoggedIn || !user?.id || !token) {
+      console.warn(
+        "Please login before adding to wishlist."
+      );
+      return;
+    }
+
     try {
       const productId = Number(product.id);
 
@@ -98,12 +113,13 @@ export function WishlistProvider({ children }) {
       }
 
       const response = await fetch(
-        `${API_URL}/wishlist/${USER_ID}/items`,
+        `${API_URL}/wishlist/${user.id}/items`,
         {
           method: "POST",
 
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
 
           body: JSON.stringify({
@@ -121,17 +137,6 @@ export function WishlistProvider({ children }) {
         );
       }
 
-      // If already in wishlist, don't duplicate it.
-      if (
-        result.message ===
-        "Product is already in wishlist"
-      ) {
-        await fetchWishlist();
-        return;
-      }
-
-      // Refresh from backend so frontend always
-      // matches PostgreSQL.
       await fetchWishlist();
 
     } catch (error) {
@@ -143,16 +148,21 @@ export function WishlistProvider({ children }) {
   };
 
   // =======================================================
-  // REMOVE PRODUCT FROM WISHLIST
+  // REMOVE FROM WISHLIST
   // =======================================================
 
   const removeFromWishlist = async (productId) => {
+    if (!isLoggedIn || !user?.id || !token) {
+      return;
+    }
+
     try {
-      // Find wishlist item using product ID
-      const wishlistItem = wishlistItems.find(
-        (item) =>
-          Number(item.id) === Number(productId)
-      );
+      const wishlistItem =
+        wishlistItems.find(
+          (item) =>
+            Number(item.id) ===
+            Number(productId)
+        );
 
       if (!wishlistItem) {
         console.warn(
@@ -162,7 +172,6 @@ export function WishlistProvider({ children }) {
         return;
       }
 
-      // Backend gives us wishlistItemId
       const wishlistItemId =
         wishlistItem.wishlistItemId;
 
@@ -175,9 +184,14 @@ export function WishlistProvider({ children }) {
       }
 
       const response = await fetch(
-        `${API_URL}/wishlist/${USER_ID}/items/${wishlistItemId}`,
+        `${API_URL}/wishlist/${user.id}/items/${wishlistItemId}`,
         {
           method: "DELETE",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -190,7 +204,6 @@ export function WishlistProvider({ children }) {
         );
       }
 
-      // Refresh from backend
       await fetchWishlist();
 
     } catch (error) {
@@ -206,17 +219,27 @@ export function WishlistProvider({ children }) {
   // =======================================================
 
   const toggleWishlist = async (product) => {
-    const exists = isInWishlist(product.id);
+    if (!isLoggedIn || !user?.id || !token) {
+      console.warn(
+        "Please login before using wishlist."
+      );
+      return;
+    }
+
+    const exists =
+      isInWishlist(product.id);
 
     if (exists) {
-      await removeFromWishlist(product.id);
+      await removeFromWishlist(
+        product.id
+      );
     } else {
       await addToWishlist(product);
     }
   };
 
   // =======================================================
-  // WISHLIST COUNT
+  // COUNT
   // =======================================================
 
   const wishlistCount =
