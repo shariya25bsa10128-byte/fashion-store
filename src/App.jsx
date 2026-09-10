@@ -498,9 +498,10 @@ function App() {
         =================================================== */}
 
         <Route
-          path="/admin"
-          element={<AdminDashboard />}
-        />
+  path="/admin"
+  element={<AdminDashboard />}
+/>
+
 
         {/* ===================================================
             ADMIN — PRODUCTS
