@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -32,9 +33,16 @@ function ProductDetails() {
   // PRODUCT
   // =========================================================
 
-  const product = products.find(
+  const staticProduct = products.find(
     (item) => item.id === Number(id)
   );
+
+  const [product, setProduct] = useState(
+    staticProduct || null
+  );
+
+  const [productLoading, setProductLoading] =
+    useState(!staticProduct);
 
   const { addToCart } = useCart();
 
@@ -50,28 +58,105 @@ function ProductDetails() {
   } = useAuth();
 
   // =========================================================
+  // FETCH PRODUCT
+  // =========================================================
+
+  useEffect(() => {
+    let ignore = false;
+
+    const localProduct = products.find(
+      (item) => item.id === Number(id)
+    );
+
+    if (localProduct) {
+      setProduct(localProduct);
+      setProductLoading(false);
+      return;
+    }
+
+    const fetchProduct = async () => {
+      try {
+        setProductLoading(true);
+
+        const response = await fetch(
+          `${API_BASE_URL}/products`
+        );
+
+        const result = await response.json();
+
+        if (
+          !response.ok ||
+          !result.success ||
+          !Array.isArray(result.data)
+        ) {
+          throw new Error(
+            result.message ||
+              "Failed to load products."
+          );
+        }
+
+        const foundProduct = result.data.find(
+          (item) => item.id === Number(id)
+        );
+
+        if (!ignore) {
+          setProduct(foundProduct || null);
+        }
+      } catch (error) {
+        console.error(
+          "FETCH PRODUCT ERROR:",
+          error
+        );
+
+        if (!ignore) {
+          setProduct(null);
+        }
+      } finally {
+        if (!ignore) {
+          setProductLoading(false);
+        }
+      }
+    };
+
+    fetchProduct();
+
+    return () => {
+      ignore = true;
+    };
+  }, [id]);
+
+  // =========================================================
   // PRODUCT STATE
   // =========================================================
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [selectedSize, setSelectedSize] =
+    useState(null);
+  const [selectedColor, setSelectedColor] =
+    useState(null);
+  const [showSizeGuide, setShowSizeGuide] =
+    useState(false);
 
   // =========================================================
   // REVIEW STATE
   // =========================================================
 
   const [reviews, setReviews] = useState([]);
-  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewsLoading, setReviewsLoading] =
+    useState(false);
 
-  const [selectedRating, setSelectedRating] = useState(0);
-  const [reviewComment, setReviewComment] = useState("");
+  const [selectedRating, setSelectedRating] =
+    useState(0);
+
+  const [reviewComment, setReviewComment] =
+    useState("");
 
   const [reviewSubmitting, setReviewSubmitting] =
     useState(false);
 
-  const [reviewError, setReviewError] = useState("");
+  const [reviewError, setReviewError] =
+    useState("");
+
   const [reviewSuccess, setReviewSuccess] =
     useState("");
 
@@ -89,7 +174,9 @@ function ProductDetails() {
           "10-12Y",
         ]
       : product?.category === "Men" &&
-        product?.name?.toLowerCase().includes("jeans")
+        product?.name
+          ?.toLowerCase()
+          .includes("jeans")
       ? [
           "26",
           "28",
@@ -152,7 +239,10 @@ function ProductDetails() {
 
       const result = await response.json();
 
-      if (!response.ok || !result.success) {
+      if (
+        !response.ok ||
+        !result.success
+      ) {
         throw new Error(
           result.message ||
             "Failed to load reviews."
@@ -178,6 +268,22 @@ function ProductDetails() {
       setReviewsLoading(false);
     }
   };
+
+  // =========================================================
+  // PRODUCT LOADING
+  // =========================================================
+
+  if (productLoading) {
+    return (
+      <main className="product-not-found">
+        <h1>Loading Product...</h1>
+
+        <p>
+          Please wait while we load the product.
+        </p>
+      </main>
+    );
+  }
 
   // =========================================================
   // PRODUCT NOT FOUND
@@ -237,10 +343,6 @@ function ProductDetails() {
     setReviewError("");
     setReviewSuccess("");
 
-    // -------------------------------------------------------
-    // LOGIN CHECK
-    // -------------------------------------------------------
-
     if (!isLoggedIn || !user?.id) {
       setReviewError(
         "Please sign in to write a review."
@@ -249,10 +351,6 @@ function ProductDetails() {
       return;
     }
 
-    // -------------------------------------------------------
-    // TOKEN CHECK
-    // -------------------------------------------------------
-
     if (!token) {
       setReviewError(
         "Your login session has expired. Please sign in again."
@@ -260,10 +358,6 @@ function ProductDetails() {
 
       return;
     }
-
-    // -------------------------------------------------------
-    // RATING VALIDATION
-    // -------------------------------------------------------
 
     if (
       selectedRating < 1 ||
@@ -275,10 +369,6 @@ function ProductDetails() {
 
       return;
     }
-
-    // -------------------------------------------------------
-    // COMMENT VALIDATION
-    // -------------------------------------------------------
 
     const trimmedComment =
       reviewComment.trim();
@@ -300,10 +390,6 @@ function ProductDetails() {
 
       return;
     }
-
-    // -------------------------------------------------------
-    // SUBMIT REVIEW
-    // -------------------------------------------------------
 
     try {
       setReviewSubmitting(true);
@@ -346,20 +432,12 @@ function ProductDetails() {
         );
       }
 
-      // -----------------------------------------------------
-      // SUCCESS
-      // -----------------------------------------------------
-
       setReviewSuccess(
         "Your review has been submitted successfully."
       );
 
       setSelectedRating(0);
       setReviewComment("");
-
-      // -----------------------------------------------------
-      // RELOAD REVIEWS
-      // -----------------------------------------------------
 
       await loadReviews();
     } catch (error) {
@@ -400,10 +478,6 @@ function ProductDetails() {
   // =========================================================
 
   const handleAddToCart = () => {
-    // -------------------------------------------------------
-    // SIZE CHECK
-    // -------------------------------------------------------
-
     if (!selectedSize) {
       alert(
         "Please select a size."
@@ -412,10 +486,6 @@ function ProductDetails() {
       return;
     }
 
-    // -------------------------------------------------------
-    // COLOR CHECK
-    // -------------------------------------------------------
-
     if (!selectedColor) {
       alert(
         "Please select a color."
@@ -423,10 +493,6 @@ function ProductDetails() {
 
       return;
     }
-
-    // -------------------------------------------------------
-    // ADD PRODUCT
-    // -------------------------------------------------------
 
     addToCart(
       {
@@ -441,10 +507,6 @@ function ProductDetails() {
       quantity
     );
 
-    // -------------------------------------------------------
-    // RESET QUANTITY
-    // -------------------------------------------------------
-
     setQuantity(1);
   };
 
@@ -453,10 +515,6 @@ function ProductDetails() {
   // =========================================================
 
   const handleWhatsAppOrder = () => {
-    // -------------------------------------------------------
-    // SIZE CHECK
-    // -------------------------------------------------------
-
     if (!selectedSize) {
       alert(
         "Please select a size."
@@ -464,10 +522,6 @@ function ProductDetails() {
 
       return;
     }
-
-    // -------------------------------------------------------
-    // COLOR CHECK
-    // -------------------------------------------------------
 
     if (!selectedColor) {
       alert(
@@ -477,16 +531,8 @@ function ProductDetails() {
       return;
     }
 
-    // -------------------------------------------------------
-    // CALCULATE TOTAL
-    // -------------------------------------------------------
-
     const totalPrice =
       product.price * quantity;
-
-    // -------------------------------------------------------
-    // CREATE WHATSAPP MESSAGE
-    // -------------------------------------------------------
 
     const message = `Hello FashionStore! 👋
 
@@ -507,18 +553,10 @@ I would like to order:
 
 Please confirm my order and let me know the next steps. Thank you!`;
 
-    // -------------------------------------------------------
-    // CREATE WHATSAPP URL
-    // -------------------------------------------------------
-
     const whatsappUrl =
       `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
         message
       )}`;
-
-    // -------------------------------------------------------
-    // OPEN WHATSAPP
-    // -------------------------------------------------------
 
     window.open(
       whatsappUrl,
@@ -632,9 +670,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
       <div className="product-details-container">
 
-        {/* =================================================
-            BACK BUTTON
-        ================================================= */}
+        {/* BACK BUTTON */}
 
         <Link
           to={`/${product.category.toLowerCase()}`}
@@ -646,15 +682,11 @@ Please confirm my order and let me know the next steps. Thank you!`;
           {product.category.toUpperCase()}
         </Link>
 
-        {/* =================================================
-            PRODUCT DETAILS
-        ================================================= */}
+        {/* PRODUCT DETAILS */}
 
         <div className="product-details">
 
-          {/* =================================================
-              PRODUCT IMAGE
-          ================================================= */}
+          {/* PRODUCT IMAGE */}
 
           <div className="product-details-image">
 
@@ -675,9 +707,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
           </div>
 
-          {/* =================================================
-              PRODUCT INFORMATION
-          ================================================= */}
+          {/* PRODUCT INFORMATION */}
 
           <div className="product-details-info">
 
@@ -689,15 +719,15 @@ Please confirm my order and let me know the next steps. Thank you!`;
               {product.name}
             </h1>
 
-            {/* =================================================
-                PRICE
-            ================================================= */}
+            {/* PRICE */}
 
             <div className="product-details-price">
 
               <span>
                 ₹
-                {product.price.toLocaleString(
+                {Number(
+                  product.price
+                ).toLocaleString(
                   "en-IN"
                 )}
               </span>
@@ -705,7 +735,9 @@ Please confirm my order and let me know the next steps. Thank you!`;
               {product.oldPrice && (
                 <del>
                   ₹
-                  {product.oldPrice.toLocaleString(
+                  {Number(
+                    product.oldPrice
+                  ).toLocaleString(
                     "en-IN"
                   )}
                 </del>
@@ -719,22 +751,14 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
             </div>
 
-            {/* =================================================
-                DESCRIPTION
-            ================================================= */}
+            {/* DESCRIPTION */}
 
             <p className="product-description">
-              A thoughtfully designed piece
-              made for everyday style and
-              comfort. Crafted with quality
-              materials and an effortless
-              silhouette, this piece is perfect
-              for building a versatile wardrobe.
+              {product.description ||
+                "A thoughtfully designed piece made for everyday style and comfort. Crafted with quality materials and an effortless silhouette, this piece is perfect for building a versatile wardrobe."}
             </p>
 
-            {/* =================================================
-                SIZE
-            ================================================= */}
+            {/* SIZE */}
 
             <div className="product-option">
 
@@ -747,7 +771,11 @@ Please confirm my order and let me know the next steps. Thank you!`;
                 <button
                   type="button"
                   className="size-guide-button"
-                  onClick={() => setShowSizeGuide(true)}
+                  onClick={() =>
+                    setShowSizeGuide(
+                      true
+                    )
+                  }
                 >
                   SIZE GUIDE
                 </button>
@@ -782,9 +810,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
             </div>
 
-            {/* =================================================
-                COLOR
-            ================================================= */}
+            {/* COLOR */}
 
             <div className="product-option">
 
@@ -831,7 +857,6 @@ Please confirm my order and let me know the next steps. Thank you!`;
                           size={14}
                         />
                       )}
-
                     </button>
                   )
                 )}
@@ -840,9 +865,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
             </div>
 
-            {/* =================================================
-                QUANTITY
-            ================================================= */}
+            {/* QUANTITY */}
 
             <div className="product-option">
 
@@ -884,9 +907,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
             </div>
 
-            {/* =================================================
-                ADD TO BAG
-            ================================================= */}
+            {/* ADD TO BAG */}
 
             <button
               type="button"
@@ -900,9 +921,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
               ADD TO BAG
             </button>
 
-            {/* =================================================
-                ORDER ON WHATSAPP
-            ================================================= */}
+            {/* WHATSAPP */}
 
             <button
               type="button"
@@ -916,9 +935,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
               ORDER ON WHATSAPP
             </button>
 
-            {/* =================================================
-                WISHLIST
-            ================================================= */}
+            {/* WISHLIST */}
 
             <button
               type="button"
@@ -946,9 +963,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
             </button>
 
-            {/* =================================================
-                PRODUCT DETAILS
-            ================================================= */}
+            {/* PRODUCT EXTRA DETAILS */}
 
             <div className="product-extra-details">
 
@@ -995,15 +1010,11 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
         </div>
 
-        {/* =================================================
-            REVIEWS
-        ================================================= */}
+        {/* REVIEWS */}
 
         <section className="product-reviews-section">
 
-          {/* =================================================
-              REVIEW HEADER
-          ================================================= */}
+          {/* REVIEW HEADER */}
 
           <div className="product-reviews-header">
 
@@ -1046,9 +1057,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
           </div>
 
-          {/* =================================================
-              ERROR
-          ================================================= */}
+          {/* ERROR */}
 
           {reviewError && (
             <div className="product-review-message error">
@@ -1056,9 +1065,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
             </div>
           )}
 
-          {/* =================================================
-              SUCCESS
-          ================================================= */}
+          {/* SUCCESS */}
 
           {reviewSuccess && (
             <div className="product-review-message success">
@@ -1066,9 +1073,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
             </div>
           )}
 
-          {/* =================================================
-              WRITE REVIEW
-          ================================================= */}
+          {/* WRITE REVIEW */}
 
           <div className="product-write-review">
 
@@ -1103,9 +1108,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
                 </div>
 
-                {/* =================================================
-                    RATING
-                ================================================= */}
+                {/* RATING */}
 
                 <div className="product-review-form-group">
 
@@ -1124,9 +1127,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
                 </div>
 
-                {/* =================================================
-                    COMMENT
-                ================================================= */}
+                {/* COMMENT */}
 
                 <div className="product-review-form-group">
 
@@ -1163,9 +1164,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
                 </div>
 
-                {/* =================================================
-                    SUBMIT REVIEW
-                ================================================= */}
+                {/* SUBMIT REVIEW */}
 
                 <button
                   type="button"
@@ -1188,9 +1187,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
           </div>
 
-          {/* =================================================
-              CUSTOMER REVIEWS
-          ================================================= */}
+          {/* CUSTOMER REVIEWS */}
 
           <div className="product-reviews-list">
 
@@ -1202,9 +1199,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
             </div>
 
-            {/* =================================================
-                LOADING
-            ================================================= */}
+            {/* LOADING */}
 
             {reviewsLoading ? (
 
@@ -1285,109 +1280,242 @@ Please confirm my order and let me know the next steps. Thank you!`;
 
         </section>
 
-        {/* =================================================
-            SIZE GUIDE MODAL
-        ================================================= */}
+        {/* SIZE GUIDE MODAL */}
 
         {showSizeGuide && (
           <div
             className="size-guide-overlay"
-            onClick={() => setShowSizeGuide(false)}
+            onClick={() =>
+              setShowSizeGuide(false)
+            }
           >
             <div
               className="size-guide-modal"
-              onClick={(event) => event.stopPropagation()}
+              onClick={(event) =>
+                event.stopPropagation()
+              }
             >
+
               <button
                 type="button"
                 className="size-guide-close"
-                onClick={() => setShowSizeGuide(false)}
+                onClick={() =>
+                  setShowSizeGuide(false)
+                }
                 aria-label="Close size guide"
               >
                 ×
               </button>
 
               <div className="size-guide-header">
-                <p>FIND YOUR FIT</p>
-                <h2>Size Guide</h2>
+
+                <p>
+                  FIND YOUR FIT
+                </p>
+
+                <h2>
+                  Size Guide
+                </h2>
+
                 <span>
                   Choose the right size for your perfect fit.
                 </span>
+
               </div>
 
+              {/* MEN'S JEANS */}
+
               {product?.category === "Men" &&
-                product?.name?.toLowerCase().includes("jeans") && (
+                product?.name
+                  ?.toLowerCase()
+                  .includes("jeans") && (
+
                   <div className="size-guide-content">
-                    <h3>MEN'S JEANS</h3>
+
+                    <h3>
+                      MEN'S JEANS
+                    </h3>
+
                     <table className="size-guide-table">
+
                       <thead>
+
                         <tr>
                           <th>SIZE</th>
                           <th>WAIST (IN)</th>
                           <th>HIP (IN)</th>
                         </tr>
+
                       </thead>
+
                       <tbody>
-                        <tr><td>26</td><td>26</td><td>34–35</td></tr>
-                        <tr><td>28</td><td>28</td><td>36–37</td></tr>
-                        <tr><td>30</td><td>30</td><td>38–39</td></tr>
-                        <tr><td>32</td><td>32</td><td>40–41</td></tr>
-                        <tr><td>34</td><td>34</td><td>42–43</td></tr>
+
+                        <tr>
+                          <td>26</td>
+                          <td>26</td>
+                          <td>34–35</td>
+                        </tr>
+
+                        <tr>
+                          <td>28</td>
+                          <td>28</td>
+                          <td>36–37</td>
+                        </tr>
+
+                        <tr>
+                          <td>30</td>
+                          <td>30</td>
+                          <td>38–39</td>
+                        </tr>
+
+                        <tr>
+                          <td>32</td>
+                          <td>32</td>
+                          <td>40–41</td>
+                        </tr>
+
+                        <tr>
+                          <td>34</td>
+                          <td>34</td>
+                          <td>42–43</td>
+                        </tr>
+
                       </tbody>
+
                     </table>
+
                     <p className="size-guide-note">
                       Measure around your natural waist for the best fit.
                     </p>
+
                   </div>
                 )}
 
-              {!product?.name?.toLowerCase().includes("jeans") &&
+              {/* MEN / WOMEN */}
+
+              {!product?.name
+                ?.toLowerCase()
+                .includes("jeans") &&
                 product?.category !== "Kids" && (
+
                   <div className="size-guide-content">
+
                     <h3>
                       {product?.category === "Women"
                         ? "WOMEN'S CLOTHING"
                         : "MEN'S CLOTHING"}
                     </h3>
+
                     <table className="size-guide-table">
+
                       <thead>
+
                         <tr>
                           <th>SIZE</th>
                           <th>CHEST (IN)</th>
                           <th>WAIST (IN)</th>
                         </tr>
+
                       </thead>
+
                       <tbody>
-                        <tr><td>S</td><td>36–38</td><td>30–32</td></tr>
-                        <tr><td>M</td><td>38–40</td><td>32–34</td></tr>
-                        <tr><td>L</td><td>40–42</td><td>34–36</td></tr>
-                        <tr><td>XL</td><td>42–44</td><td>36–38</td></tr>
-                        <tr><td>XXL</td><td>44–46</td><td>38–40</td></tr>
+
+                        <tr>
+                          <td>S</td>
+                          <td>36–38</td>
+                          <td>30–32</td>
+                        </tr>
+
+                        <tr>
+                          <td>M</td>
+                          <td>38–40</td>
+                          <td>32–34</td>
+                        </tr>
+
+                        <tr>
+                          <td>L</td>
+                          <td>40–42</td>
+                          <td>34–36</td>
+                        </tr>
+
+                        <tr>
+                          <td>XL</td>
+                          <td>42–44</td>
+                          <td>36–38</td>
+                        </tr>
+
+                        <tr>
+                          <td>XXL</td>
+                          <td>44–46</td>
+                          <td>38–40</td>
+                        </tr>
+
                       </tbody>
+
                     </table>
+
                     <p className="size-guide-note">
                       If you are between two sizes, we recommend choosing the larger size.
                     </p>
+
                   </div>
                 )}
 
+              {/* KIDS */}
+
               {product?.category === "Kids" && (
+
                 <div className="size-guide-content">
-                  <h3>KIDS' CLOTHING</h3>
+
+                  <h3>
+                    KIDS' CLOTHING
+                  </h3>
+
                   <table className="size-guide-table">
+
                     <thead>
-                      <tr><th>SIZE</th><th>AGE</th></tr>
+
+                      <tr>
+                        <th>SIZE</th>
+                        <th>AGE</th>
+                      </tr>
+
                     </thead>
+
                     <tbody>
-                      <tr><td>2-3Y</td><td>2–3 Years</td></tr>
-                      <tr><td>4-5Y</td><td>4–5 Years</td></tr>
-                      <tr><td>6-7Y</td><td>6–7 Years</td></tr>
-                      <tr><td>8-10Y</td><td>8–10 Years</td></tr>
-                      <tr><td>10-12Y</td><td>10–12 Years</td></tr>
+
+                      <tr>
+                        <td>2-3Y</td>
+                        <td>2–3 Years</td>
+                      </tr>
+
+                      <tr>
+                        <td>4-5Y</td>
+                        <td>4–5 Years</td>
+                      </tr>
+
+                      <tr>
+                        <td>6-7Y</td>
+                        <td>6–7 Years</td>
+                      </tr>
+
+                      <tr>
+                        <td>8-10Y</td>
+                        <td>8–10 Years</td>
+                      </tr>
+
+                      <tr>
+                        <td>10-12Y</td>
+                        <td>10–12 Years</td>
+                      </tr>
+
                     </tbody>
+
                   </table>
+
                 </div>
               )}
+
             </div>
           </div>
         )}
