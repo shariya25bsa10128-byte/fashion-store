@@ -6803,3 +6803,292 @@
     flex-basis: 26px;
   }
 }
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.site-footer {
+  background: #111;
+  color: #fff;
+  margin-top: 60px;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 30px 45px;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1fr;
+  gap: 45px;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-section h2 {
+  font-size: 22px;
+  letter-spacing: 2px;
+  margin: 0 0 18px;
+}
+
+.footer-section h3 {
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin: 0 0 20px;
+}
+
+.footer-section p {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0 0 10px;
+  max-width: 300px;
+}
+
+.footer-section a {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 12px;
+  transition: color 0.2s ease;
+}
+
+.footer-section a:hover {
+  color: #fff;
+}
+
+.footer-socials {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-bottom {
+  border-top: 1px solid #2b2b2b;
+  text-align: center;
+  padding: 20px 30px;
+}
+
+.footer-bottom p {
+  color: #888;
+  font-size: 12px;
+  margin: 0;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+    padding: 45px 25px;
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+/* =========================================================
+   SIZE GUIDE
+   ========================================================= */
+
+.size-guide-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  color: #666;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.size-guide-button:hover {
+  color: #111;
+}
+
+/* OVERLAY */
+
+.size-guide-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 9999;
+}
+
+/* MODAL */
+
+.size-guide-modal {
+  position: relative;
+
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: #fff;
+
+  padding: 45px 50px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+/* CLOSE BUTTON */
+
+.size-guide-close {
+  position: absolute;
+
+  top: 18px;
+  right: 22px;
+
+  border: none;
+  background: none;
+
+  font-size: 28px;
+  font-weight: 300;
+
+  cursor: pointer;
+
+  color: #111;
+}
+
+.size-guide-close:hover {
+  color: #777;
+}
+
+/* HEADER */
+
+.size-guide-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.size-guide-header p {
+  margin: 0 0 8px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  color: #777;
+}
+
+.size-guide-header h2 {
+  margin: 0 0 10px;
+
+  font-size: 30px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+.size-guide-header span {
+  font-size: 13px;
+  color: #777;
+}
+
+/* CONTENT */
+
+.size-guide-content h3 {
+  margin: 0 0 18px;
+
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+/* TABLE */
+
+.size-guide-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  font-size: 13px;
+}
+
+.size-guide-table th {
+  background: #f5f5f5;
+
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-weight: 700;
+
+  padding: 14px 12px;
+
+  text-align: center;
+
+  border: 1px solid #ddd;
+}
+
+.size-guide-table td {
+  padding: 14px 12px;
+
+  text-align: center;
+
+  border: 1px solid #ddd;
+
+  color: #444;
+}
+
+.size-guide-table td:first-child {
+  font-weight: 700;
+  color: #111;
+}
+
+/* NOTE */
+
+.size-guide-note {
+  margin: 18px 0 0;
+
+  font-size: 12px;
+  line-height: 1.6;
+
+  color: #777;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .size-guide-modal {
+    padding: 40px 20px;
+    max-height: 85vh;
+  }
+
+  .size-guide-header h2 {
+    font-size: 25px;
+  }
+
+  .size-guide-table {
+    font-size: 12px;
+  }
+
+  .size-guide-table th,
+  .size-guide-table td {
+    padding: 11px 6px;
+  }
+
+}

@@ -20,7 +20,7 @@ const products = [
 
   {
     id: 2,
-    name: "Relaxed Fit Denim",
+    name: "Relaxed Fit Jeans",
     category: "Men",
     subcategory: "Jeans",
     price: 1899,

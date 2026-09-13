@@ -56,6 +56,7 @@ function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
 
   // =========================================================
   // REVIEW STATE
@@ -86,6 +87,15 @@ function ProductDetails() {
           "6-7Y",
           "8-10Y",
           "10-12Y",
+        ]
+      : product?.category === "Men" &&
+        product?.name?.toLowerCase().includes("jeans")
+      ? [
+          "26",
+          "28",
+          "30",
+          "32",
+          "34",
         ]
       : [
           "S",
@@ -737,6 +747,7 @@ Please confirm my order and let me know the next steps. Thank you!`;
                 <button
                   type="button"
                   className="size-guide-button"
+                  onClick={() => setShowSizeGuide(true)}
                 >
                   SIZE GUIDE
                 </button>
@@ -1273,6 +1284,113 @@ Please confirm my order and let me know the next steps. Thank you!`;
           </div>
 
         </section>
+
+        {/* =================================================
+            SIZE GUIDE MODAL
+        ================================================= */}
+
+        {showSizeGuide && (
+          <div
+            className="size-guide-overlay"
+            onClick={() => setShowSizeGuide(false)}
+          >
+            <div
+              className="size-guide-modal"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="size-guide-close"
+                onClick={() => setShowSizeGuide(false)}
+                aria-label="Close size guide"
+              >
+                ×
+              </button>
+
+              <div className="size-guide-header">
+                <p>FIND YOUR FIT</p>
+                <h2>Size Guide</h2>
+                <span>
+                  Choose the right size for your perfect fit.
+                </span>
+              </div>
+
+              {product?.category === "Men" &&
+                product?.name?.toLowerCase().includes("jeans") && (
+                  <div className="size-guide-content">
+                    <h3>MEN'S JEANS</h3>
+                    <table className="size-guide-table">
+                      <thead>
+                        <tr>
+                          <th>SIZE</th>
+                          <th>WAIST (IN)</th>
+                          <th>HIP (IN)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>26</td><td>26</td><td>34–35</td></tr>
+                        <tr><td>28</td><td>28</td><td>36–37</td></tr>
+                        <tr><td>30</td><td>30</td><td>38–39</td></tr>
+                        <tr><td>32</td><td>32</td><td>40–41</td></tr>
+                        <tr><td>34</td><td>34</td><td>42–43</td></tr>
+                      </tbody>
+                    </table>
+                    <p className="size-guide-note">
+                      Measure around your natural waist for the best fit.
+                    </p>
+                  </div>
+                )}
+
+              {!product?.name?.toLowerCase().includes("jeans") &&
+                product?.category !== "Kids" && (
+                  <div className="size-guide-content">
+                    <h3>
+                      {product?.category === "Women"
+                        ? "WOMEN'S CLOTHING"
+                        : "MEN'S CLOTHING"}
+                    </h3>
+                    <table className="size-guide-table">
+                      <thead>
+                        <tr>
+                          <th>SIZE</th>
+                          <th>CHEST (IN)</th>
+                          <th>WAIST (IN)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>S</td><td>36–38</td><td>30–32</td></tr>
+                        <tr><td>M</td><td>38–40</td><td>32–34</td></tr>
+                        <tr><td>L</td><td>40–42</td><td>34–36</td></tr>
+                        <tr><td>XL</td><td>42–44</td><td>36–38</td></tr>
+                        <tr><td>XXL</td><td>44–46</td><td>38–40</td></tr>
+                      </tbody>
+                    </table>
+                    <p className="size-guide-note">
+                      If you are between two sizes, we recommend choosing the larger size.
+                    </p>
+                  </div>
+                )}
+
+              {product?.category === "Kids" && (
+                <div className="size-guide-content">
+                  <h3>KIDS' CLOTHING</h3>
+                  <table className="size-guide-table">
+                    <thead>
+                      <tr><th>SIZE</th><th>AGE</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>2-3Y</td><td>2–3 Years</td></tr>
+                      <tr><td>4-5Y</td><td>4–5 Years</td></tr>
+                      <tr><td>6-7Y</td><td>6–7 Years</td></tr>
+                      <tr><td>8-10Y</td><td>8–10 Years</td></tr>
+                      <tr><td>10-12Y</td><td>10–12 Years</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
       </div>
 

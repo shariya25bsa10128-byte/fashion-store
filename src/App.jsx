@@ -274,6 +274,127 @@ function NotFound() {
 }
 
 // =========================================================
+// FOOTER
+// =========================================================
+
+function Footer() {
+  return (
+    <footer className="site-footer">
+
+      <div className="footer-container">
+
+        {/* BRAND */}
+        <div className="footer-section">
+
+          <h2>
+            FASHIONSTORE
+          </h2>
+
+          <p>
+            Discover the latest trends, timeless essentials,
+            and styles made for everyday fashion.
+          </p>
+
+        </div>
+
+        {/* QUICK LINKS */}
+        <div className="footer-section">
+
+          <h3>
+            QUICK LINKS
+          </h3>
+
+          <Link to="/">
+            Home
+          </Link>
+
+          <Link to="/men">
+            Men
+          </Link>
+
+          <Link to="/women">
+            Women
+          </Link>
+
+          <Link to="/kids">
+            Kids
+          </Link>
+
+          <Link to="/sale">
+            Sale
+          </Link>
+
+        </div>
+
+        {/* LOCATION */}
+        <div className="footer-section">
+
+          <h3>
+            LOCATION
+          </h3>
+
+          <p>
+            📍 Bhopal, Madhya Pradesh, India
+          </p>
+
+          <p>
+            Available online across India
+          </p>
+
+        </div>
+
+        {/* SOCIAL MEDIA */}
+        <div className="footer-section">
+
+          <h3>
+            FOLLOW US
+          </h3>
+
+          <div className="footer-socials">
+
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram
+            </a>
+
+            <a
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Facebook
+            </a>
+
+            <a
+              href="https://www.youtube.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              YouTube
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div className="footer-bottom">
+
+        <p>
+          © 2026 FASHIONSTORE. All rights reserved.
+        </p>
+
+      </div>
+
+    </footer>
+  );
+}
+
+// =========================================================
 // APP
 // =========================================================
 
@@ -498,10 +619,14 @@ function App() {
         =================================================== */}
 
         <Route
-  path="/admin"
-  element={<AdminDashboard />}
-/>
+          path="/admin"
+          element={<AdminDashboard />}
+        />
 
+        <Route
+          path="/admin/dashboard"
+          element={<AdminDashboard />}
+        />
 
         {/* ===================================================
             ADMIN — PRODUCTS
@@ -567,6 +692,12 @@ function App() {
         />
 
       </Routes>
+
+      {/* =====================================================
+          FOOTER
+      ===================================================== */}
+
+      <Footer />
 
     </BrowserRouter>
   );
