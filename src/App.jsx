@@ -5,6 +5,8 @@ import {
   Link,
 } from "react-router-dom";
 
+import { useEffect, useState } from "react";
+
 import Navbar from "./components/Navbar";
 import ProductCard from "./components/ProductCard";
 
@@ -72,7 +74,7 @@ const categories = [
 // HOME PAGE
 // =========================================================
 
-function Home() {
+function Home({ storeProducts }) {
   return (
     <main>
 
@@ -196,7 +198,7 @@ function Home() {
 
         <div className="products-grid">
 
-          {products
+          {storeProducts
             .slice(0, 4)
             .map((product) => (
 
@@ -284,6 +286,7 @@ function Footer() {
       <div className="footer-container">
 
         {/* BRAND */}
+
         <div className="footer-section">
 
           <h2>
@@ -298,6 +301,7 @@ function Footer() {
         </div>
 
         {/* QUICK LINKS */}
+
         <div className="footer-section">
 
           <h3>
@@ -327,6 +331,7 @@ function Footer() {
         </div>
 
         {/* LOCATION */}
+
         <div className="footer-section">
 
           <h3>
@@ -344,6 +349,7 @@ function Footer() {
         </div>
 
         {/* SOCIAL MEDIA */}
+
         <div className="footer-section">
 
           <h3>
@@ -399,6 +405,57 @@ function Footer() {
 // =========================================================
 
 function App() {
+
+  // Start with the existing static products as a fallback.
+  const [storeProducts, setStoreProducts] =
+    useState(products);
+
+  // =======================================================
+  // LOAD PRODUCTS FROM BACKEND / SUPABASE
+  // =======================================================
+
+  useEffect(() => {
+
+    const API_BASE_URL =
+      import.meta.env.VITE_API_URL ||
+      "http://localhost:5000/api";
+
+    const loadProducts = async () => {
+
+      try {
+
+        const response = await fetch(
+          `${API_BASE_URL}/products`
+        );
+
+        const result =
+          await response.json();
+
+        if (
+          response.ok &&
+          result.success &&
+          Array.isArray(result.data)
+        ) {
+
+          setStoreProducts(result.data);
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Failed to load products:",
+          error
+        );
+
+      }
+
+    };
+
+    loadProducts();
+
+  }, []);
+
   return (
     <BrowserRouter>
 
@@ -420,7 +477,11 @@ function App() {
 
         <Route
           path="/"
-          element={<Home />}
+          element={
+            <Home
+              storeProducts={storeProducts}
+            />
+          }
         />
 
         {/* ===================================================
@@ -489,7 +550,7 @@ function App() {
             <CategoryPage
               title="Men's Collection"
               subtitle="Discover contemporary essentials, timeless classics, and everyday styles designed for the modern man."
-              products={products.filter(
+              products={storeProducts.filter(
                 (product) =>
                   product.category === "Men"
               )}
@@ -507,7 +568,7 @@ function App() {
             <CategoryPage
               title="Women's Collection"
               subtitle="Explore modern silhouettes, effortless essentials, and statement pieces designed for every occasion."
-              products={products.filter(
+              products={storeProducts.filter(
                 (product) =>
                   product.category === "Women"
               )}
@@ -525,7 +586,7 @@ function App() {
             <CategoryPage
               title="Kids' Collection"
               subtitle="Fun, comfortable, and stylish everyday pieces made for little personalities."
-              products={products.filter(
+              products={storeProducts.filter(
                 (product) =>
                   product.category === "Kids"
               )}
@@ -543,7 +604,7 @@ function App() {
             <CategoryPage
               title="New Arrivals"
               subtitle="Fresh styles and the latest pieces from our newest collection."
-              products={products.filter(
+              products={storeProducts.filter(
                 (product) =>
                   product.isNew === true
               )}
@@ -561,7 +622,7 @@ function App() {
             <CategoryPage
               title="Sale"
               subtitle="Shop your favorite styles at special prices while stocks last."
-              products={products.filter(
+              products={storeProducts.filter(
                 (product) =>
                   product.isSale === true
               )}
