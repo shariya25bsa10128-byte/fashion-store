@@ -42,6 +42,8 @@ function AdminProducts() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [selectedImageName, setSelectedImageName] = useState("");
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -141,6 +143,76 @@ function AdminProducts() {
   };
 
   // =========================================================
+  // UPLOAD PRODUCT IMAGE
+  // =========================================================
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/gif",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setError("Please choose a JPG, PNG, WEBP or GIF image.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be smaller than 5 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      setError("");
+      setSuccess("");
+      setSelectedImageName(file.name);
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch(`${API_URL}/upload-image`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result?.message || "Unable to upload product image."
+        );
+      }
+
+      setForm((previous) => ({
+        ...previous,
+        image: result.data.imageUrl,
+      }));
+
+      setSuccess("Image uploaded successfully.");
+    } catch (err) {
+      console.error("PRODUCT IMAGE UPLOAD ERROR:", err);
+      setSelectedImageName("");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to upload product image."
+      );
+      event.target.value = "";
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  // =========================================================
   // OPEN ADD FORM
   // =========================================================
 
@@ -151,6 +223,8 @@ function AdminProducts() {
       ...emptyForm,
       isActive: true,
     });
+
+    setSelectedImageName("");
 
     setError("");
     setSuccess("");
@@ -164,6 +238,7 @@ function AdminProducts() {
 
   const openEditForm = (product) => {
     setEditingProduct(product);
+    setSelectedImageName("");
 
     setForm({
       name: product.name || "",
@@ -207,6 +282,7 @@ function AdminProducts() {
     setShowForm(false);
     setEditingProduct(null);
     setForm(emptyForm);
+    setSelectedImageName("");
   };
 
   // =========================================================
@@ -250,7 +326,7 @@ function AdminProducts() {
 
     if (!form.image.trim()) {
       setError(
-        "Product image URL is required."
+        "Please choose a product image or enter an image URL."
       );
       return;
     }
@@ -359,6 +435,7 @@ function AdminProducts() {
       setShowForm(false);
       setEditingProduct(null);
       setForm(emptyForm);
+      setSelectedImageName("");
 
       // Reload ALL products from admin endpoint.
       await loadProducts();
@@ -1323,24 +1400,111 @@ function AdminProducts() {
               {/* IMAGE */}
 
               <div className="admin-form-group">
-
                 <label>
+                  IMAGE
+                </label>
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginBottom: "14px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <label
+                    htmlFor="product-image-upload"
+                    className="admin-secondary-button"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor:
+                        saving || uploadingImage
+                          ? "not-allowed"
+                          : "pointer",
+                      opacity:
+                        saving || uploadingImage ? 0.6 : 1,
+                    }}
+                  >
+                    {uploadingImage
+                      ? "UPLOADING..."
+                      : "CHOOSE IMAGE"}
+                  </label>
+
+                  <input
+                    id="product-image-upload"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    onChange={handleImageUpload}
+                    disabled={saving || uploadingImage}
+                    style={{ display: "none" }}
+                  />
+
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      color: "#666",
+                    }}
+                  >
+                    {selectedImageName || "No file chosen"}
+                  </span>
+                </div>
+
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "8px",
+                  }}
+                >
                   IMAGE URL
                 </label>
 
                 <input
                   type="url"
                   name="image"
-                  value={
-                    form.image
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={form.image}
+                  onChange={handleChange}
                   placeholder="https://..."
-                  disabled={saving}
+                  disabled={saving || uploadingImage}
                 />
 
+                {form.image && (
+                  <div
+                    style={{
+                      marginTop: "14px",
+                      width: "140px",
+                      height: "170px",
+                      border: "1px solid #ddd",
+                      overflow: "hidden",
+                      background: "#f7f7f7",
+                    }}
+                  >
+                    <img
+                      src={form.image}
+                      alt="Product preview"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                      onError={(event) => {
+                        event.currentTarget.style.display = "none";
+                      }}
+                    />
+                  </div>
+                )}
+
+                <p
+                  style={{
+                    marginTop: "8px",
+                    fontSize: "12px",
+                    color: "#777",
+                  }}
+                >
+                  JPG, PNG, WEBP or GIF • Maximum 5 MB
+                </p>
               </div>
 
 

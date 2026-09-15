@@ -346,6 +346,29 @@ function Footer() {
             Available online across India
           </p>
 
+          <div
+            style={{
+              marginTop: "15px",
+              width: "100%",
+              overflow: "hidden",
+              borderRadius: "8px",
+            }}
+          >
+            <iframe
+              title="FASHIONSTORE Location"
+              src="https://www.google.com/maps?q=Bhopal%2C%20Madhya%20Pradesh%2C%20India&output=embed"
+              width="100%"
+              height="200"
+              style={{
+                border: 0,
+                display: "block",
+              }}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+
         </div>
 
         {/* SOCIAL MEDIA */}
